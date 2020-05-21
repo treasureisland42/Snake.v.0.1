@@ -1,5 +1,5 @@
-import java.lang.reflect.Array;
-import java.util.Arrays;
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Game {
@@ -8,8 +8,9 @@ public class Game {
     private final int height;
     private static int[][] pos = new int[][]{{0, 1},
                                         {0, 2}, {1, 2}, {1, 3}};
-    private static Snake snake = new Snake(pos, "UP");
-    private static Game game = new Game(10, 10);
+    private static ArrayList<Point> points = new ArrayList<>();
+    private static Snake snake;
+    private static Game game;
 
     //creates an instance of game
     public Game(int height, int width) {
@@ -19,6 +20,14 @@ public class Game {
     }
 
     public static void main(String[] args) {
+
+        for (int[] po : pos) {
+            for (int j = 0; j < 1; j++) {
+                points.add(new Point(po[j], po[j + 1]));
+            }
+        }
+        snake = new Snake(points, pos, "UP");
+        game = new Game(10, 10);
         render(game);
         move();
     }
@@ -32,9 +41,11 @@ public class Game {
                 matrix[t][r] = 0;
                 //iterates through the list of positions of the snake and checks against the current board position.
                 for(int g = 0; g < Snake.getPos(snake).length; g++){
-                        if (r == Snake.getPos(snake)[g][0] && t == Snake.getPos(snake)[g][1]) {
+                    int x = Snake.getPos(snake)[g].x;
+                    int y = Snake.getPos(snake)[g].y;
+                        if (r == x && t == y) {
                             matrix[t][r] = 1;
-                        } if (r == Snake.getHead(snake)[0][0] && t == Snake.getHead(snake)[0][1]) {
+                        } if (r == Snake.getHead(snake).x && t == Snake.getHead(snake).y) {
                             matrix[t][r] = 2;
                         }
                     }
@@ -50,7 +61,7 @@ public class Game {
         for (int i = 0; i < game.height; i++) {
             System.out.print("* ");
             for (int j = 0; j < game.width; j++) {
-
+                //should replace with switch
                 if (matrix[i][j] == 0) {
                     System.out.print("  ");
                 } else if(matrix[i][j] == 1){
@@ -81,30 +92,26 @@ public class Game {
         int[][]move = new int[1][2];
         switch(dir){
             case "U" :
-                move = snake.setDirection("U");
+                move = Snake.setDirection("U");
                 break;
             case "D" :
-                move = snake.setDirection("D");
+                move = Snake.setDirection("D");
                 break;
             case "L" :
-                move = snake.setDirection("L");
+                move = Snake.setDirection("L");
                 break;
             case "R" :
-                move = snake.setDirection("R");
+                move = Snake.setDirection("R");
                 break;
             default :
                 System.out.print("Invalid direction");
         }
-        //gets the head of the snake and makes the movement. Adds this movement to top of positions list and removes the
-        //last one.
-        int[][] headPos = Snake.getHead(snake);
-        int[][] newHeadPos = new int[1][2];
-        newHeadPos[0][0] = headPos[0][0] + move[0][0];
-        newHeadPos[0][1] = headPos[0][1] + move[0][1];
+
+        Point headPos = Snake.getHead(snake);
+        Point newHeadPos = new Point(headPos.x + move[0][0], headPos.y + move[0][1]);
         Snake.takeStep(newHeadPos, snake);
-        //above line returns an array of the new positions, but they arent assigned to the snake object in this class, so when
-        //render is run again, the board just reprints
         render(game);
+        //move not functioning correctly. have to take into account edges, and wrapping on self
         move();
 
 
