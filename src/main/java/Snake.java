@@ -16,7 +16,7 @@ public class Snake {
             {1, 2},
             {1, 3}
     };
-    private static ArrayList<Point> points;
+    static ArrayList<Point> points;
 
 
     public Snake(ArrayList<Point> p, int[][] pos, String direction) {
@@ -37,19 +37,19 @@ public class Snake {
     //method to take a step, updates and returns an arraylist of coords, including the new position
     public static Snake takeStep(Point p, Snake s){
 
-        points.remove(0);
-        points.add(points.size(), p);
+        points.remove(points.size() - 1);
+        points.add(0, p);
         return s;
     }
 
     public static int[][] setDirection(String direction){
         int index = 0;
+        Point pointDir = new Point(1,2);
         //change this for enum at some point.
-        if(direction.equalsIgnoreCase("D")) {
-        }
+        if(direction.equalsIgnoreCase("D")) index = 0;
         if(direction.equalsIgnoreCase("U")) index = 1;
-        if(direction.equalsIgnoreCase("R")) index = 2;
-        if(direction.equalsIgnoreCase("L")) index = 3;
+        if(direction.equalsIgnoreCase("L")) index = 2;
+        if(direction.equalsIgnoreCase("R")) index = 3;
 
         //populates the newDir array with the coordinates
         int[][] newDir = new int[1][2];
@@ -60,7 +60,7 @@ public class Snake {
     }
 
     //returns an array of coordinates of the snake head
-    public static Point getHead(Snake snake){
+    public static Point getHead(){
 
         return new Point(points.get(0));
     }
