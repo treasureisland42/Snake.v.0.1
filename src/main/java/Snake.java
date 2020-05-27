@@ -19,9 +19,8 @@ public class Snake {
     static ArrayList<Point> points;
 
 
-    public Snake(ArrayList<Point> p, int[][] pos, String direction) {
+    public Snake(ArrayList<Point> p,  String direction) {
         points = p;
-        Snake.pos = pos;
         Snake.direction = direction;
     }
 
@@ -38,6 +37,11 @@ public class Snake {
     public static Snake takeStep(Point p, Snake s){
 
         points.remove(points.size() - 1);
+        points.add(0, p);
+        return s;
+    }
+
+    public static Snake growSnake(Point p, Snake s){
         points.add(0, p);
         return s;
     }
@@ -76,7 +80,7 @@ public class Snake {
 
     //returns a Snake
     public static Snake getSnake(){
-        return new Snake(points, pos, "UP");
+        return new Snake(points, "UP");
     }
 
 
